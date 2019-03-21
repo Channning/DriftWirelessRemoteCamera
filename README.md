@@ -1,4 +1,4 @@
-# 基于Cam的 开发App的 SDK操作指南
+# 基于Cam的APIs 开发App的SDK操作指南
 
 
 一．相机控制：
