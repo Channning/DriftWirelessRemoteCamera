@@ -13,7 +13,7 @@
 		D7582F932241DD1000F2927B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7582F922241DD1000F2927B /* Assets.xcassets */; };
 		D7582F962241DD1000F2927B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7582F942241DD1000F2927B /* LaunchScreen.storyboard */; };
 		D7582F992241DD1000F2927B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7582F982241DD1000F2927B /* main.m */; };
-		D7582FAA2242222700F2927B /* ambaStateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = D7582FA92242222700F2927B /* ambaStateMachine.m */; };
+		D7582FAA2242222700F2927B /* DriftStateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = D7582FA92242222700F2927B /* DriftStateMachine.m */; };
 		D7582FAE2242229000F2927B /* DriftCameraCommandsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7582FAC2242228F00F2927B /* DriftCameraCommandsViewController.m */; };
 		D7582FB1224223E700F2927B /* FileDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = D7582FB0224223E700F2927B /* FileDownload.m */; };
 		D7582FB42242246500F2927B /* FileUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = D7582FB32242246500F2927B /* FileUpload.m */; };
@@ -59,9 +59,9 @@
 		D7582F972241DD1000F2927B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7582F982241DD1000F2927B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D7582FA42242156400F2927B /* DriftWirelessRemoteControl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DriftWirelessRemoteControl.entitlements; sourceTree = "<group>"; };
-		D7582FA82242222700F2927B /* ambaStateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ambaStateMachine.h; sourceTree = "<group>"; };
-		D7582FA92242222700F2927B /* ambaStateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ambaStateMachine.m; sourceTree = "<group>"; };
-		D7582FAB2242223900F2927B /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
+		D7582FA82242222700F2927B /* DriftStateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriftStateMachine.h; sourceTree = "<group>"; };
+		D7582FA92242222700F2927B /* DriftStateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriftStateMachine.m; sourceTree = "<group>"; };
+		D7582FAB2242223900F2927B /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		D7582FAC2242228F00F2927B /* DriftCameraCommandsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriftCameraCommandsViewController.m; sourceTree = "<group>"; };
 		D7582FAD2242229000F2927B /* DriftCameraCommandsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriftCameraCommandsViewController.h; sourceTree = "<group>"; };
 		D7582FAF224223E700F2927B /* FileDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileDownload.h; sourceTree = "<group>"; };
@@ -305,9 +305,9 @@
 		D7582F9F2242122B00F2927B /* WirelessMachine */ = {
 			isa = PBXGroup;
 			children = (
-				D7582FA82242222700F2927B /* ambaStateMachine.h */,
-				D7582FA92242222700F2927B /* ambaStateMachine.m */,
-				D7582FAB2242223900F2927B /* constants.h */,
+				D7582FA82242222700F2927B /* DriftStateMachine.h */,
+				D7582FA92242222700F2927B /* DriftStateMachine.m */,
+				D7582FAB2242223900F2927B /* Constants.h */,
 			);
 			path = WirelessMachine;
 			sourceTree = "<group>";
@@ -668,7 +668,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7582FAE2242229000F2927B /* DriftCameraCommandsViewController.m in Sources */,
-				D7582FAA2242222700F2927B /* ambaStateMachine.m in Sources */,
+				D7582FAA2242222700F2927B /* DriftStateMachine.m in Sources */,
 				D793832622435E1300297A38 /* DriftRTSPPlayer.m in Sources */,
 				D793832522435E1300297A38 /* DriftRTSPPlayBack.m in Sources */,
 				D7582F8E2241DD0D00F2927B /* ViewController.m in Sources */,
@@ -826,6 +826,7 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/FFmpeg-iOS/include";
 				INFOPLIST_FILE = DriftWirelessRemoteControl/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -847,6 +848,7 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/FFmpeg-iOS/include";
 				INFOPLIST_FILE = DriftWirelessRemoteControl/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

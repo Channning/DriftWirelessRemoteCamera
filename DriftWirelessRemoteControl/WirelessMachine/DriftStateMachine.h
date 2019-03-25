@@ -1,18 +1,18 @@
 //
-//  ambaStateMachine.h
-//  AmbaRemoteCam
+//  DriftStateMachine.h
+//  DriftRemoteCam
 //
-//  Created by (Ram Kumar) Ambarella
-//  Copyright (c) 2014 Ambarella. All rights reserved.
+//  Created by Channing.rong
+//  Copyright (c) 2019 Drift Innovication ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "FileDownload.h"
 #import "FileUpload.h"
-#import "constants.h"
+#import "Constants.h"
 
-@interface ambaStateMachine : NSObject <CBCentralManagerDelegate, CBPeripheralDelegate, NSStreamDelegate>
+@interface DriftStateMachine : NSObject <CBCentralManagerDelegate, CBPeripheralDelegate, NSStreamDelegate>
 {
     NSInputStream  *inputStream;
     NSOutputStream *outputStream;
@@ -20,13 +20,12 @@
 }
 
 //Common-----------------------------
-+ (ambaStateMachine *) getInstance;
++ (DriftStateMachine *) getInstance;
 
-@property (nonatomic, retain) NSNumber *sessionToken;
+@property (nonatomic, strong) NSNumber *sessionToken;
 
-@property (nonatomic, retain) NSMutableString *lastCommand;
-//@property (nonatomic, retain) NSMutableArray *currentCommand;
-@property (nonatomic, retain) NSMutableString *currentCommand;
+@property (nonatomic, strong) NSMutableString *lastCommand;
+@property (nonatomic, strong) NSMutableString *currentCommand;
 @property (nonatomic) NSMutableString *typeObject;
 @property (nonatomic) NSMutableString *paramObject;
 @property (nonatomic) NSInteger offsetObject;
@@ -35,21 +34,21 @@
 @property (nonatomic) NSInteger  fileAttributeValue;
 @property (nonatomic) NSInteger commandReturnValue;
 
-@property (nonatomic, retain) NSMutableArray *parameterNameList;
+@property (nonatomic, strong) NSMutableArray *parameterNameList;
 @property (nonatomic) NSInteger  currentParamIndex;
-@property (nonatomic, retain) NSString *buttonTitleName;
-@property (nonatomic, retain) NSMutableArray *optionParameterNameList;
+@property (nonatomic, strong) NSString *buttonTitleName;
+@property (nonatomic, strong) NSMutableArray *optionParameterNameList;
 @property (nonatomic) NSInteger optionCurrentParamIndex;
-@property (nonatomic, retain) NSString *optionButtonTitleName;
+@property (nonatomic, strong) NSString *optionButtonTitleName;
 @property (nonatomic) NSString *permissionFlag;
 
 @property (nonatomic) NSInteger networkModeBle; // 0=BLE disabled 1=Selected BLE as network link
 @property (nonatomic) NSInteger networkModeWifi; // 0=wifi Disabled 1=selected Wifi as network Link
 @property (nonatomic) NSInteger wifiBleComboMode; // 0=disabled 1=wifi+bleMode
 
-@property (nonatomic) NSString *customCommandString;
-@property (nonatomic, retain) NSString *playbackFile;
-@property (nonatomic, retain) NSString *presentWorkingDirPath;
+@property (nonatomic, copy) NSString *customCommandString;
+@property (nonatomic, copy) NSString *playbackFile;
+@property (nonatomic, copy) NSString *presentWorkingDirPath;
 
 
 @property (nonatomic) NSInteger notificationCount;
@@ -103,11 +102,11 @@
 @property (nonatomic) BOOL bleMode; // 0 = CentralManager unInit  1=CM init
 @property (nonatomic) BOOL bleScanFlag; // NO=disable scanning YES=EnableScanning
 @property (nonatomic, strong) CBCentralManager *manager;
-@property (nonatomic, retain) CBPeripheral     *activePeripheral;
+@property (nonatomic, strong) CBPeripheral     *activePeripheral;
 @property (nonatomic, strong) CBCharacteristic *sendCharacteristics, *readCharacteristics;
 
-@property (nonatomic, retain) NSMutableArray *peripheralNameList;
-@property (nonatomic, retain) NSMutableArray *peripheralList;
+@property (nonatomic, strong) NSMutableArray *peripheralNameList;
+@property (nonatomic, strong) NSMutableArray *peripheralList;
 
 
 - (void) cleanup:(CBPeripheral *)activePeripheral;
@@ -128,15 +127,15 @@
 //- (void) stopSessionBle;
 
 //Wifi-----------------------------
-@property (nonatomic, retain) NSInputStream *inputStream;
-@property (nonatomic, retain) NSOutputStream *outputStream;
-@property (nonatomic, retain) NSMutableArray *messages;
+@property (nonatomic, strong) NSInputStream *inputStream;
+@property (nonatomic, strong) NSOutputStream *outputStream;
+@property (nonatomic, strong) NSMutableArray *messages;
 
 @property (nonatomic, assign) NSInteger wifiTCPConnectionStatus; // 1=connected 0=unable to connect
-@property (nonatomic, retain) NSMutableString *wifiIPParameters;
-@property (nonatomic, retain) NSMutableString *notifyMsg;
-@property (nonatomic, retain) NSMutableArray  *notifyFileList;
-@property (atomic, retain) NSNumber *connected;
+@property (nonatomic, strong) NSMutableString *wifiIPParameters;
+@property (nonatomic, strong) NSMutableString *notifyMsg;
+@property (nonatomic, strong) NSMutableArray  *notifyFileList;
+@property (atomic, strong) NSNumber *connected;
 
 - (void) initNetworkCommunication: (NSString *)ipAddress tcpPort:(NSInteger)tcpPortNo;
 

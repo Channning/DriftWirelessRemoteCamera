@@ -36,11 +36,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(noConnectionStatus:)
                                                  name:noConnectionStatusNotification
-                                               object:[ambaStateMachine getInstance]];
+                                               object:[DriftStateMachine getInstance]];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(connectionStatus:)
                                                  name:connectionStatusNotification
-                                               object:[ambaStateMachine getInstance]];
+                                               object:[DriftStateMachine getInstance]];
     
 }
 
@@ -79,7 +79,7 @@
 {
     if ([self isDriftCameraIPAddress:[self fetchSSIDName]])
     {
-        [[ambaStateMachine getInstance] initNetworkCommunication:self.cameraIPAddress.text tcpPort: 7878];
+        [[DriftStateMachine getInstance] initNetworkCommunication:self.cameraIPAddress.text tcpPort: 7878];
     }
     else
     {

@@ -29,7 +29,7 @@
     // Do any additional setup after loading the view.
     NSArray     *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES);
     NSString    *documentsDirectory = [paths objectAtIndex:0];
-    NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"AmbaRemoteCam.txt"];
+    NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"DriftRemoteCam.txt"];
     NSFileManager   *manager = [NSFileManager defaultManager];
     NSLog(@"View Log File Path --------------->: %@",filePath);
     if ( [manager fileExistsAtPath:filePath]) {
@@ -50,16 +50,16 @@
 
 - (void) querySessionHolder: (NSNotification *)notificationParam
 {
-    if ([ ambaStateMachine getInstance].notificationCount ){
+    if ([ DriftStateMachine getInstance].notificationCount ){
         
         UIAlertView *jsonDebugAlert = [[UIAlertView alloc] initWithTitle:@"Last Command Response:"
-                                                                 message: [ambaStateMachine getInstance].notifyMsg
+                                                                 message: [DriftStateMachine getInstance].notifyMsg
                                                                 delegate:self
                                                        cancelButtonTitle:@"RetainSession"
                                                        otherButtonTitles:@"logout", nil];
         [jsonDebugAlert show];
         
-        [ ambaStateMachine getInstance].notificationCount = 0;
+        [ DriftStateMachine getInstance].notificationCount = 0;
     }
 }
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -69,7 +69,7 @@
         //NSLog(@"#############CancelButton Was Activated");
         NSLog(@"LogOut button Selected");
     } else {
-        [[ambaStateMachine getInstance ] keepSessionActive];
+        [[DriftStateMachine getInstance ] keepSessionActive];
     }
 }
 
@@ -97,7 +97,7 @@
 }
 
 - (IBAction)resetLog:(id)sender {
-    [[ambaStateMachine getInstance] resetLogFile:@"AmbaRemoteCam.txt"];
+    [[DriftStateMachine getInstance] resetLogFile:@"DriftRemoteCam.txt"];
     [self viewDidLoad];
 }
 

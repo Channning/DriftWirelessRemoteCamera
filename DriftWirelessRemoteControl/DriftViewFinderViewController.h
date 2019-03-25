@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ambaStateMachine.h"
-#import "constants.h"
+#import "DriftStateMachine.h"
+#import "Constants.h"
 #import "DriftRTSPPlayer.h"
 NS_ASSUME_NONNULL_BEGIN
 

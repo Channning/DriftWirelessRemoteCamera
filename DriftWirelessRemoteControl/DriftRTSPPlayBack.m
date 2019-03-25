@@ -28,7 +28,7 @@ unsigned int timerFlag; //0 - stop rtsp view. 1 -restart view
                                                object:nil];
     
     timerFlag = 1;
-    [[ambaStateMachine getInstance] presentWorkingDir];
+    [[DriftStateMachine getInstance] presentWorkingDir];
     
     [self performSelector:@selector(updateURL) withObject:nil afterDelay:0.5];
     
@@ -38,16 +38,16 @@ unsigned int timerFlag; //0 - stop rtsp view. 1 -restart view
 
 - (void) querySessionHolder: (NSNotification *)notificationParam
 {
-    if ([ ambaStateMachine getInstance].notificationCount ){
+    if ([ DriftStateMachine getInstance].notificationCount ){
         
         UIAlertView *jsonDebugAlert = [[UIAlertView alloc] initWithTitle:@"Last Command Response:"
-                                                                 message: [ambaStateMachine getInstance].notifyMsg
+                                                                 message: [DriftStateMachine getInstance].notifyMsg
                                                                 delegate:self
                                                        cancelButtonTitle:@"RetainSession"
                                                        otherButtonTitles:@"logout", nil];
         [jsonDebugAlert show];
         
-        [ ambaStateMachine getInstance].notificationCount = 0;
+        [ DriftStateMachine getInstance].notificationCount = 0;
     }
 }
 
@@ -56,20 +56,20 @@ unsigned int timerFlag; //0 - stop rtsp view. 1 -restart view
     if (buttonIndex == [alertView cancelButtonIndex]) {
         NSLog(@"LogOut button Selected");
     } else {
-        [[ambaStateMachine getInstance ] keepSessionActive];
+        [[DriftStateMachine getInstance ] keepSessionActive];
     }
 }
 
 
 
 -(void) updateURL {
-    if ([ambaStateMachine getInstance].wifiBleComboMode || [ambaStateMachine getInstance].networkModeWifi)
+    if ([DriftStateMachine getInstance].wifiBleComboMode || [DriftStateMachine getInstance].networkModeWifi)
     {
-        NSString *playBackFileName = [ambaStateMachine getInstance].playbackFile;
+        NSString *playBackFileName = [DriftStateMachine getInstance].playbackFile;
         
         NSString *playbackURL = [NSString stringWithFormat:@"rtsp://192.168.42.1%@/%@",
-                                 [ambaStateMachine getInstance].presentWorkingDirPath, playBackFileName
-                                 //[ambaStateMachine getInstance].playbackFile
+                                 [DriftStateMachine getInstance].presentWorkingDirPath, playBackFileName
+                                 //[DriftStateMachine getInstance].playbackFile
                                  ];
         
         //NSString *playbackURL = [NSString stringWithFormat:@"rtsp://192.168.42.1/live"];

@@ -41,14 +41,14 @@ unsigned int selectedRowIndexNumber;
 @synthesize moviePlayer, changeDirectoryButton;
 @synthesize wifiItemList, wifiListTableView;
 @synthesize selectedWifiParameter,selectedWifiParameterToEdit;
-@synthesize ambaQuerySessionHolderSwitch;
+@synthesize driftQuerySessionHolderSwitch;
 
 
 - (void) hideMainButtons
 {
-    //NSLog(@"DBG: %ld",(long)[AMBAWifiRemoteControl getInstance].wifiTCPConnectionStatus );
-    if ([ambaStateMachine getInstance].networkModeWifi == 1) {
-        if ( [ambaStateMachine getInstance].wifiTCPConnectionStatus == 1 ) {
+    //NSLog(@"DBG: %ld",(long)[DriftWifiRemoteControl getInstance].wifiTCPConnectionStatus );
+    if ([DriftStateMachine getInstance].networkModeWifi == 1) {
+        if ( [DriftStateMachine getInstance].wifiTCPConnectionStatus == 1 ) {
             //NSLog(@"TCP connection Is enabled");
             //[self hideMainButtons];
         } else {
@@ -59,8 +59,8 @@ unsigned int selectedRowIndexNumber;
                                                          completion:nil];
         }
     }
-    if ([ambaStateMachine getInstance].networkModeBle == 1) {
-        if ([ambaStateMachine getInstance].cameraBleMode == NO) {
+    if ([DriftStateMachine getInstance].networkModeBle == 1) {
+        if ([DriftStateMachine getInstance].cameraBleMode == NO) {
             NSLog(@"BLE connection was failed");
             [self.tcpConnectionFailButton setHidden:NO];
             [self.tcpConnectionFailButton setEnabled:YES];
@@ -168,7 +168,7 @@ unsigned int selectedRowIndexNumber;
     //self.clientIPAddrTextBox.enabled = NO;
     //assert(self.tcpConnectionFailButton != nil);
     
-    if ( [ambaStateMachine getInstance].wifiTCPConnectionStatus == 0 ) {
+    if ( [DriftStateMachine getInstance].wifiTCPConnectionStatus == 0 ) {
         [self.tcpConnectionFailButton setHidden:NO];
         [self.tcpConnectionFailButton setEnabled:YES];
     } else {
@@ -176,26 +176,26 @@ unsigned int selectedRowIndexNumber;
        
     }
     
-//    self.customJSONTextField.text = [[ambaStateMachine getInstance] customString];
+//    self.customJSONTextField.text = [[DriftStateMachine getInstance] customString];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(severedNotification:)
                                                  name:cameraSeveredNotification
-                                               object:[ambaStateMachine getInstance]];
+                                               object:[DriftStateMachine getInstance]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(jsonCommandDebug:)
                                                  name:jsonDebugNotification
                                                object:nil];
-                                               //object:[AMBAWifiRemoteControl getInstance]];
+                                               //object:[DriftWifiRemoteControl getInstance]];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector: @selector(connectedToRemoteCam:)
                                                  name: changeInConnectionStatusNotification
-                                               object: [ambaStateMachine getInstance]];
+                                               object: [DriftStateMachine getInstance]];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(disconnectedToRemoteCam:)
                                                  name:startSessionRefusalNotification
-                                               object:[ambaStateMachine getInstance]];
+                                               object:[DriftStateMachine getInstance]];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(updateCommandReturnStatus:)
@@ -222,37 +222,37 @@ unsigned int selectedRowIndexNumber;
     
     self.fList = [[NSMutableArray alloc] init];
     
-    [ambaQuerySessionHolderSwitch addTarget:self action:@selector(changeSwitch) forControlEvents:UIControlEventValueChanged];
+    [driftQuerySessionHolderSwitch addTarget:self action:@selector(changeSwitch) forControlEvents:UIControlEventValueChanged];
     
 }
 
 - (void) changeSwitch {
-    if ([self.ambaQuerySessionHolderSwitch isOn])
+    if ([self.driftQuerySessionHolderSwitch isOn])
     {
-        NSLog(@"Auto resend AMBA_QUERY_SESSION_HOLDER  = ON");
-        [ambaStateMachine getInstance].enableSessionHolder = YES;
+        NSLog(@"Auto resend DRIFT_QUERY_SESSION_HOLDER  = ON");
+        [DriftStateMachine getInstance].enableSessionHolder = YES;
     } else {
-        NSLog(@"disable auto response AMBA_QUERY_SESSION_HOLDER = OFF");
-        [ambaStateMachine getInstance].enableSessionHolder = NO;
+        NSLog(@"disable auto response DRIFT_QUERY_SESSION_HOLDER = OFF");
+        [DriftStateMachine getInstance].enableSessionHolder = NO;
     }
 }
 
 
 - (void) querySessionHolder: (NSNotification *)notificationParam
 {
-    if ( ([ ambaStateMachine getInstance].notificationCount ) && ([ambaStateMachine getInstance].enableSessionHolder == NO)){
+    if ( ([ DriftStateMachine getInstance].notificationCount ) && ([DriftStateMachine getInstance].enableSessionHolder == NO)){
         
        UIAlertView *jsonDebugAlert = [[UIAlertView alloc] initWithTitle:@"Last Command Response:"
-                                                                 message: [ambaStateMachine getInstance].notifyMsg
+                                                                 message: [DriftStateMachine getInstance].notifyMsg
                                                                 delegate:self
                                                        cancelButtonTitle:@"close"
                                                        otherButtonTitles:@"Retain Session", nil];
  
         [jsonDebugAlert show];
 
-        [ ambaStateMachine getInstance].notificationCount = 0;
-    } else { //Auto Replay to amba_qurty_session_holder
-        [[ambaStateMachine getInstance ] keepSessionActive];
+        [ DriftStateMachine getInstance].notificationCount = 0;
+    } else { //Auto Replay to drift_qurty_session_holder
+        [[DriftStateMachine getInstance ] keepSessionActive];
 
     }
 }
@@ -264,7 +264,7 @@ unsigned int selectedRowIndexNumber;
         NSLog(@"Notification Alert Selected");
     } else {
         NSLog(@"Retain Current Session");
-        [[ambaStateMachine getInstance ] keepSessionActive];
+        [[DriftStateMachine getInstance ] keepSessionActive];
     }
 }
 -(void) viewWillAppear:(BOOL)animated
@@ -316,9 +316,9 @@ unsigned int selectedRowIndexNumber;
 }
 
 - (IBAction)setPlayBackFileName:(id)sender {
-    //[[ambaStateMachine getInstance] presentWorkingDir];
+    //[[DriftStateMachine getInstance] presentWorkingDir];
     if (self.selectedFile != nil) {
-        [ambaStateMachine getInstance].playbackFile = self.selectedFile;
+        [DriftStateMachine getInstance].playbackFile = self.selectedFile;
     }
 }
 
@@ -332,9 +332,9 @@ unsigned int selectedRowIndexNumber;
 
 - (void) connectedToRemoteCam:(NSNotificationCenter *)notificationParam
 {
-    NSLog(@"Connection to Ambarella remote camera done");
+    NSLog(@"Connection to Drift remote camera done");
     
-    [[[UIAlertView alloc] initWithTitle:@"Connection To Ambarella Remote Cam: "
+    [[[UIAlertView alloc] initWithTitle:@"Connection To Drift Remote Cam: "
                                 message:@"Camera Control Session Status: Success"
                                delegate:nil
                       cancelButtonTitle:@"OK"
@@ -346,7 +346,7 @@ unsigned int selectedRowIndexNumber;
 {
     NSLog(@"Start Session Failed !!!");
     
-    [[[UIAlertView alloc] initWithTitle:@"Connection To Ambarella Remote Cam: "
+    [[[UIAlertView alloc] initWithTitle:@"Connection To Drift Remote Cam: "
                                 message:@"Start Session: FAIL, Camera May Be in Manual Control Mode"
                                delegate:nil
                       cancelButtonTitle:@"OK"
@@ -359,37 +359,37 @@ unsigned int selectedRowIndexNumber;
 - (void) severedNotification: (NSNotification *)notificationParam
 {
     //NSLog(@"Camera Severed Notification:1");
-    if ( [ ambaStateMachine getInstance].notificationCount ) {
+    if ( [ DriftStateMachine getInstance].notificationCount ) {
         UIAlertView *severedConnectionAlert = [[UIAlertView alloc] initWithTitle:@"Notification From Camera:"
-                                                                     message: [ambaStateMachine getInstance].notifyMsg
+                                                                     message: [DriftStateMachine getInstance].notifyMsg
                                                                     delegate:self
                                                            cancelButtonTitle:@"Close"
                                                            otherButtonTitles: nil];
         [severedConnectionAlert show];
-        [ambaStateMachine getInstance].notificationCount = 0;
+        [DriftStateMachine getInstance].notificationCount = 0;
     }
 }
 
 - (void) jsonCommandDebug: (NSNotification *)notificationParam
 {
     //NSLog(@"Camera Severed Notification:2");
-    if ([ ambaStateMachine getInstance].notificationCount ){
+    if ([ DriftStateMachine getInstance].notificationCount ){
         UIAlertView *jsonDebugAlert = [[UIAlertView alloc] initWithTitle:@"Last Command Response:"
-                                                                 message: [ambaStateMachine getInstance].notifyMsg
+                                                                 message: [DriftStateMachine getInstance].notifyMsg
                                                                 delegate:self
                                                        cancelButtonTitle:@"Close"
                                                        otherButtonTitles: nil];
         [jsonDebugAlert show];
         //notificationCount = 0;
-        [ ambaStateMachine getInstance].notificationCount = 0;
+        [ DriftStateMachine getInstance].notificationCount = 0;
     }
 }
 
 - (void) updateCommandReturnStatus: (NSNotification *)notificationParam
 {
-    if ( [ambaStateMachine getInstance].commandReturnValue == 0 )
+    if ( [DriftStateMachine getInstance].commandReturnValue == 0 )
         self.returnStatusLabel.text = [NSString stringWithFormat:@"%@ SUCCESS",self.returnStatusLabel.text];
-    else if ([ambaStateMachine getInstance].commandReturnValue < 0)
+    else if ([DriftStateMachine getInstance].commandReturnValue < 0)
         self.returnStatusLabel.text = [NSString stringWithFormat:@"%@ FAIL",self.returnStatusLabel.text];
     
     if (self.selectedFile != nil) {
@@ -408,7 +408,7 @@ unsigned int selectedRowIndexNumber;
 
 
 - (IBAction)connectToCamera:(id)sender {
-    if ( [[ambaStateMachine getInstance] connectToCamera] == 0) {
+    if ( [[DriftStateMachine getInstance] connectToCamera] == 0) {
         [self enableMainButtons];
     } else {
         //TODO: Notification pop-up
@@ -419,48 +419,48 @@ unsigned int selectedRowIndexNumber;
 
 - (IBAction)takePhoto:(id)sender {
     self.returnStatusLabel.text = @"Take Photo:";
-    [[ambaStateMachine getInstance] takePhoto];
+    [[DriftStateMachine getInstance] takePhoto];
 }
 
 - (IBAction)startRecording:(id)sender {
     self.returnStatusLabel.text = @"Record:";
-    [[ambaStateMachine getInstance] cameraRecordStart];
+    [[DriftStateMachine getInstance] cameraRecordStart];
 }
 
 - (IBAction)stopRecording:(id)sender {
     self.returnStatusLabel.text = @"Stop Record:";
-    [[ambaStateMachine getInstance] cameraRecordStop];
+    [[DriftStateMachine getInstance] cameraRecordStop];
 }
 
 - (IBAction)recordingTime:(id)sender {
     self.returnStatusLabel.text = @"Get RecordingTime:";
-    [[ambaStateMachine getInstance] cameraRecordingTime];
+    [[DriftStateMachine getInstance] cameraRecordingTime];
 }
 
 - (IBAction)splitRecording:(id)sender {
     self.returnStatusLabel.text = @"Split Recording:";
-    [[ambaStateMachine getInstance] cameraSplitRecording];
+    [[DriftStateMachine getInstance] cameraSplitRecording];
 }
 
 - (IBAction)stopViewFinder:(id)sender {
     self.returnStatusLabel.text = @"Stop ViewFinder:";
-    [[ambaStateMachine getInstance] cameraStopViewFinder];
+    [[DriftStateMachine getInstance] cameraStopViewFinder];
 }
 
 - (IBAction)resetViewFinder:(id)sender {
     self.returnStatusLabel.text = @"Reset ViewFinder:";
-    [[ambaStateMachine getInstance] cameraResetViewFinder];
+    [[DriftStateMachine getInstance] cameraResetViewFinder];
 }
 
 - (IBAction)cameraAppStatus:(id)sender {
     self.returnStatusLabel.text = @"Camera APP Status:";
-    [[ambaStateMachine getInstance] cameraAppStatus];
+    [[DriftStateMachine getInstance] cameraAppStatus];
     [self reloadInputViews];
     [self hideMainButtons];
 }
 
 - (IBAction)disconnectToCamera:(id)sender {
-    if ( [[ambaStateMachine getInstance] disconnectToCamera] == 0) {
+    if ( [[DriftStateMachine getInstance] disconnectToCamera] == 0) {
         
         NSLog(@"====Session Closed====");
         
@@ -479,17 +479,17 @@ unsigned int selectedRowIndexNumber;
 }
 - (IBAction)totalStorageSpace:(id)sender {
     self.returnStatusLabel.text = @"Total Storage Space:";
-    [[ambaStateMachine getInstance] cameraStorageSpace];
+    [[DriftStateMachine getInstance] cameraStorageSpace];
 }
 
 - (IBAction)totalFreeSpace:(id)sender {
     self.returnStatusLabel.text = @"Total Free Space:";
-    [[ambaStateMachine getInstance] cameraFreeSpace];
+    [[DriftStateMachine getInstance] cameraFreeSpace];
 }
 
 - (IBAction)presentWorkingDir:(id)sender {
     self.returnStatusLabel.text = @"Camera Present Dir:";
-    [[ambaStateMachine getInstance] presentWorkingDir];
+    [[DriftStateMachine getInstance] presentWorkingDir];
 }
 
 - (IBAction)allFilesList:(id)sender {
@@ -497,14 +497,14 @@ unsigned int selectedRowIndexNumber;
     if (self.fList)
         [self.fList removeAllObjects];
     
-    [[ambaStateMachine getInstance] listAllFiles];
+    [[DriftStateMachine getInstance] listAllFiles];
 }
 
 - (IBAction)changeDirectoryFromTableView:(id)sender {
     //TODO: Enable Button only when a Field from TableView is selected
     self.returnStatusLabel.text = @"Change Directory:";
     if (self.selectedFile != nil) {
-        [[ambaStateMachine getInstance] cameraChangeToFolder: self.selectedFile];
+        [[DriftStateMachine getInstance] cameraChangeToFolder: self.selectedFile];
         NSLog(@"Change To Folder %@",self.selectedFile);//self.selectedFile);
         [self.roMediaAttributeButton setEnabled:NO];
         [self.rwMediaAttributeButton setEnabled:NO];
@@ -518,13 +518,13 @@ unsigned int selectedRowIndexNumber;
 - (IBAction)changeFolder:(id)sender  {
     self.returnStatusLabel.text = @"Change Folder:";
     //NSLog( @"Change to Folder : %@", self.changeDirectory.text);
-    [[ambaStateMachine getInstance] cameraChangeToFolder: self.changeDirectory.text];
+    [[DriftStateMachine getInstance] cameraChangeToFolder: self.changeDirectory.text];
 }
 
 - (IBAction)getMediaInfo:(id)sender {// :(NSString *)textInputVal {
     self.returnStatusLabel.text = @"Get Media Info:";
     if (self.selectedFile != nil) {
-        [[ambaStateMachine getInstance] mediaInfo: self.selectedFile];
+        [[DriftStateMachine getInstance] mediaInfo: self.selectedFile];
         [self.mediaInfoButton setEnabled:NO];
         [self.roMediaAttributeButton setEnabled:NO];
         [self.rwMediaAttributeButton setEnabled:NO];
@@ -534,10 +534,10 @@ unsigned int selectedRowIndexNumber;
 }
 
 - (IBAction)fileDownload:(id)sender { //:(NSString *)textInputVal{
-    if ([ambaStateMachine getInstance].networkModeWifi || [ambaStateMachine getInstance].wifiBleComboMode)
+    if ([DriftStateMachine getInstance].networkModeWifi || [DriftStateMachine getInstance].wifiBleComboMode)
     {
         self.returnStatusLabel.text = @"File DownLoad:";
-        [[ambaStateMachine getInstance] cameraFileDownload: self.fileToDownloadField.text
+        [[DriftStateMachine getInstance] cameraFileDownload: self.fileToDownloadField.text
                                                           :self.fileDownLoadOffset.text
                                                           :self.fileDownLoadSize.text ];
     } else {
@@ -549,27 +549,27 @@ unsigned int selectedRowIndexNumber;
 
 - (IBAction)stopFileDownload:(id)sender { //:(NSString *)textInputVal{
     self.returnStatusLabel.text = @"Stop FileDownload:";
-    [[ambaStateMachine getInstance] cameraStopFileDownload: self.fileToDownloadField.text];
+    [[DriftStateMachine getInstance] cameraStopFileDownload: self.fileToDownloadField.text];
 }
 
 - (IBAction)numberOfFiles:(id)sender {
     self.returnStatusLabel.text = @"TotalNoFiles:";
-    [[ambaStateMachine getInstance] numberOfFilesInFolder:(NSString *)@"total"];
+    [[DriftStateMachine getInstance] numberOfFilesInFolder:(NSString *)@"total"];
 }
 
 - (IBAction)numberOfPhotoFiles:(id)sender {
     self.returnStatusLabel.text = @"NoPhotoFiles:";
-    [[ambaStateMachine getInstance] numberOfFilesInFolder:(NSString *)@"photo"];
+    [[DriftStateMachine getInstance] numberOfFilesInFolder:(NSString *)@"photo"];
 }
 
 - (IBAction)numberOfVideoFiles:(id)sender {
     self.returnStatusLabel.text = @"NoVideoFiles:";
-    [[ambaStateMachine getInstance] numberOfFilesInFolder:(NSString *)@"video"];
+    [[DriftStateMachine getInstance] numberOfFilesInFolder:(NSString *)@"video"];
 }
 
 - (IBAction)formatSDCardMedia:(id)sender {
     self.returnStatusLabel.text = @"Format SD:";
-    [[ambaStateMachine getInstance] formatSDmedia:(NSString *)self.sdMediaName.text];
+    [[DriftStateMachine getInstance] formatSDmedia:(NSString *)self.sdMediaName.text];
 }
 
 
@@ -577,13 +577,13 @@ unsigned int selectedRowIndexNumber;
 - (IBAction)showDebug:(id)sender
 {
     //notificationCount = 1;
-    [[ambaStateMachine getInstance] showCameraDebugCmd];
+    [[DriftStateMachine getInstance] showCameraDebugCmd];
     
 }
 - (IBAction)deleteFile:(id)sender {
     self.returnStatusLabel.text = @"File Delete:";
     if (self.selectedFile != nil) {
-        [[ambaStateMachine getInstance] fileToRemove: self.selectedFile];
+        [[DriftStateMachine getInstance] fileToRemove: self.selectedFile];
         [self.roMediaAttributeButton setEnabled:NO];
         [self.rwMediaAttributeButton setEnabled:NO];
         [self.mediaInfoButton setEnabled:NO];
@@ -592,19 +592,19 @@ unsigned int selectedRowIndexNumber;
     }
 }
 - (IBAction) currentSettings:(id)sender{
-    [[ambaStateMachine getInstance] getCurrentSettings];
+    [[DriftStateMachine getInstance] getCurrentSettings];
 }
 
 - (IBAction)viewRTSPStream:(id)sender {
     self.returnStatusLabel.text = @"Reset ViewFinder:";
     //// -- getram22 -- ON A12 If reset vf and move to rtsp view will cause error "rtsp server" not found.
-    ////[[ambaStateMachine getInstance] cameraResetViewFinder];
+    ////[[DriftStateMachine getInstance] cameraResetViewFinder];
 }
 
 - (IBAction)zoomInfo:(id)sender {
     self.returnStatusLabel.text = @"ZooM Info:";
     [self.zoomInfoButton setEnabled:NO];
-    [[ambaStateMachine getInstance] getZoomInfo:self.zoomTypeButton.titleLabel.text];
+    [[DriftStateMachine getInstance] getZoomInfo:self.zoomTypeButton.titleLabel.text];
 }
 
 - (IBAction)toggleZoomLable:(id)sender {
@@ -620,30 +620,30 @@ unsigned int selectedRowIndexNumber;
 
 - (IBAction)setBitrate:(id)sender {
     self.returnStatusLabel.text = @"SetStreamBitRate:";
-    [[ambaStateMachine getInstance] setStreamBitrate:self.bitRateField.text];
+    [[DriftStateMachine getInstance] setStreamBitrate:self.bitRateField.text];
 }
 
 - (IBAction)getBatteryLevel:(id)sender {
     self.returnStatusLabel.text = @"GetBatteryLevelInfo:";
-    [[ambaStateMachine getInstance] getBatteryLevelInfo];
+    [[DriftStateMachine getInstance] getBatteryLevelInfo];
 }
 - (IBAction)cameraParamUp:(id)sender {
     //Enable Get Button
     [self.getCameraParameterValueButton setEnabled:YES];
     
-    [[ambaStateMachine getInstance] newTitle];
-    NSMutableArray *titleStr = (NSMutableArray *)[ambaStateMachine getInstance].buttonTitleName;
+    [[DriftStateMachine getInstance] newTitle];
+    NSMutableArray *titleStr = (NSMutableArray *)[DriftStateMachine getInstance].buttonTitleName;
     [self.cameraParaName setTitle: [titleStr  objectAtIndex:0] forState:UIControlStateNormal] ;
 }
 - (IBAction)getCameraParameterValue:(id)sender {
-    [[ambaStateMachine getInstance] cameraStopViewFinder];
+    [[DriftStateMachine getInstance] cameraStopViewFinder];
     //NSLog(@" Get Button Title : %@ ", _cameraParaName.titleLabel.text);
     self.returnStatusLabel.text = @"Get Camera Setting:";
-    [[ambaStateMachine getInstance] getSettingValue: (NSString *)self.cameraParaName.titleLabel.text ];
+    [[DriftStateMachine getInstance] getSettingValue: (NSString *)self.cameraParaName.titleLabel.text ];
 }
 - (IBAction)setCameraParamUp:(id)sender {
-    [[ambaStateMachine getInstance] newTitle];
-    NSMutableArray *setTitleStr = (NSMutableArray *)[ambaStateMachine getInstance].buttonTitleName;
+    [[DriftStateMachine getInstance] newTitle];
+    NSMutableArray *setTitleStr = (NSMutableArray *)[DriftStateMachine getInstance].buttonTitleName;
     [self.setCameraParamName setTitle: [setTitleStr objectAtIndex:0] forState: UIControlStateNormal];
     
     [self.cameraParameterOptionValue setTitle:@" --------^ " forState:UIControlStateNormal];
@@ -655,21 +655,21 @@ unsigned int selectedRowIndexNumber;
 - (IBAction)updateParamOptionButton:(id)sender {
     self.returnStatusLabel.text = @"";
     //stop streaming before set
-    [[ambaStateMachine getInstance] cameraStopViewFinder];
-    [ambaStateMachine getInstance].permissionFlag  = @"";
+    [[DriftStateMachine getInstance] cameraStopViewFinder];
+    [DriftStateMachine getInstance].permissionFlag  = @"";
     if ([self.setCameraParamName.titleLabel.text isEqualToString:@"app_status"]) {
         //disable set Button and Update the Options Buttons with N/A
         [self.cameraParameterOptionValue setTitle:@"N/A" forState:UIControlStateNormal];
         [self.setCameraParameterValue setEnabled: NO];
         NSLog(@"---App Status---");
-    } else if ([[ambaStateMachine getInstance].permissionFlag isEqualToString: @"readonly"]) {
+    } else if ([[DriftStateMachine getInstance].permissionFlag isEqualToString: @"readonly"]) {
         [self.setCameraParameterValue setEnabled: NO];
         NSLog(@"---read only---");
 
     }
     else {
         
-        [[ambaStateMachine getInstance] getOptionsForValue: (NSString *) self.setCameraParamName.titleLabel.text];
+        [[DriftStateMachine getInstance] getOptionsForValue: (NSString *) self.setCameraParamName.titleLabel.text];
         [self.setCameraParameterValue setEnabled: YES];
         [self.cameraParameterOptionValue setTitle:@" --------> " forState:UIControlStateNormal];
         [self.setCameraParameterValue setEnabled: NO];
@@ -704,12 +704,12 @@ unsigned int selectedRowIndexNumber;
     else {
         [self.setCameraParameterValue setEnabled: YES];
         //NSLog(@"Update Options Button");
-        [[ambaStateMachine getInstance] newOptionTitle];
-        NSMutableArray *optionTitleStr = (NSMutableArray *)[ambaStateMachine getInstance].optionButtonTitleName;
+        [[DriftStateMachine getInstance] newOptionTitle];
+        NSMutableArray *optionTitleStr = (NSMutableArray *)[DriftStateMachine getInstance].optionButtonTitleName;
         //NSLog( @"current Option %@",optionTitleStr);
         [self.cameraParameterOptionValue setTitle:(NSMutableString *)optionTitleStr  forState: UIControlStateNormal];
         //NSLog(@"Update Options Button--Done");
-        if ( [[ambaStateMachine getInstance].permissionFlag isEqualToString: @"readonly"] ) {
+        if ( [[DriftStateMachine getInstance].permissionFlag isEqualToString: @"readonly"] ) {
             [self.setCameraParameterValue setEnabled: NO];
             self.returnStatusLabel.text = @"!!!! READ ONLY !!!!";
         }
@@ -720,7 +720,7 @@ unsigned int selectedRowIndexNumber;
     if (cameraDateSettingFlag == 1) {
         self.returnStatusLabel.text = @"Setting Command:";
         self.cameraParameterOptionValue.titleLabel.text = self.dateTextField.text;
-        [[ambaStateMachine getInstance] setCameraParameterValue: (NSString *)self.setCameraParamName.titleLabel.text
+        [[DriftStateMachine getInstance] setCameraParameterValue: (NSString *)self.setCameraParamName.titleLabel.text
                                                                : (NSString *)self.dateTextField.text];
         cameraDateSettingFlag = 0;
         [self.dateTextField setEnabled:NO];
@@ -729,7 +729,7 @@ unsigned int selectedRowIndexNumber;
     }
     else {
         self.returnStatusLabel.text = @"Setting Command:";
-        [[ambaStateMachine getInstance] setCameraParameterValue: (NSString *)self.setCameraParamName.titleLabel.text
+        [[DriftStateMachine getInstance] setCameraParameterValue: (NSString *)self.setCameraParamName.titleLabel.text
                                                                : (NSString *)self.cameraParameterOptionValue.titleLabel.text];
         [self.setCameraParameterValue setEnabled: NO];
     }
@@ -739,7 +739,7 @@ unsigned int selectedRowIndexNumber;
 - (IBAction)setMediaReadOnly:(id)sender {
     if (self.selectedFile != nil) {
         self.returnStatusLabel.text = @"SetFileAsRO:";
-        [[ambaStateMachine getInstance] setFileAsRO:self.selectedFile];
+        [[DriftStateMachine getInstance] setFileAsRO:self.selectedFile];
     }
     [self.roMediaAttributeButton setEnabled:NO];
     [self.rwMediaAttributeButton setEnabled:NO];
@@ -751,7 +751,7 @@ unsigned int selectedRowIndexNumber;
 - (IBAction)setMediaReadWrite:(id)sender {
     if (self.selectedFile != nil) {
         self.returnStatusLabel.text = @"SetFileAsRW:";
-        [[ambaStateMachine getInstance] setFileAsRW:self.selectedFile];
+        [[DriftStateMachine getInstance] setFileAsRW:self.selectedFile];
     }
     [self.roMediaAttributeButton setEnabled:NO];
     [self.rwMediaAttributeButton setEnabled:NO];
@@ -766,15 +766,15 @@ unsigned int selectedRowIndexNumber;
 {
     if (self.fList)
         [self.fList removeAllObjects];
-    [[ambaStateMachine getInstance] listAllFiles];
+    [[DriftStateMachine getInstance] listAllFiles];
     ////[self.fList removeAllObjects];
 }
 
 - (void) updateFileListReturnStatus:(NSNotification *)notificationParam//(NSString *)test
 {
     self.returnStatusLabel.text = @"File List Updated";
-    //if ([ambaStateMachine getInstance].notificationCount == 1) {
-    NSMutableString *tmpString = [ambaStateMachine getInstance].notifyMsg;
+    //if ([DriftStateMachine getInstance].notificationCount == 1) {
+    NSMutableString *tmpString = [DriftStateMachine getInstance].notifyMsg;
     NSData *data = [tmpString dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data
                                                                  options:kNilOptions
@@ -789,7 +789,7 @@ unsigned int selectedRowIndexNumber;
     }
     //NSLog(@":::::::::%@:%d",self.fList,[self.fList count]);
     [self.fileListTableView reloadData];
-    [ambaStateMachine getInstance].notificationCount = 0;
+    [DriftStateMachine getInstance].notificationCount = 0;
 }
 
 
@@ -851,14 +851,14 @@ unsigned int selectedRowIndexNumber;
 }
 - (IBAction)getDeviceInfo:(id)sender {
     self.returnStatusLabel.text = @"Fetch Device Info:";
-    [[ambaStateMachine getInstance] getDeviceInformation];
+    [[DriftStateMachine getInstance] getDeviceInformation];
 }
 //FileUpload
 - (void) listLocalFiles
 {
     NSArray     *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES);
     NSString    *documentsDirectory = [paths objectAtIndex:0];
-   // NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"AmbaRemoteCam.txt"];
+   // NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"DriftRemoteCam.txt"];
     NSFileManager   *manager = [NSFileManager defaultManager];
     NSLog(@"List of Files in Documents Folder: %@:%d",[manager contentsOfDirectoryAtPath:documentsDirectory
                                                                                        error:nil],
@@ -947,7 +947,7 @@ unsigned int selectedRowIndexNumber;
     
     NSArray     *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES);
     NSString    *documentsDirectory = [paths objectAtIndex:0];
-    NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:self.fileToUploadTextField.text];//@"amba.jpg"];
+    NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:self.fileToUploadTextField.text];//@"Drift.jpg"];
     
     NSLog(@"Selected Image for View: %@",filePath);
 
@@ -967,7 +967,7 @@ unsigned int selectedRowIndexNumber;
     
     NSArray     *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES);
     NSString    *documentsDirectory = [paths objectAtIndex:0];
-    NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:self.fileToUploadTextField.text];//@"amba.mp4"];
+    NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:self.fileToUploadTextField.text];//@"Drift.mp4"];
     NSURL       *videoFileUrl = [NSURL fileURLWithPath:filePath];
     
     NSLog(@"Selected Local downloaded video : %@",filePath);
@@ -1007,9 +1007,9 @@ unsigned int selectedRowIndexNumber;
 }
 
 - (IBAction)uploadLocalFile:(id)sender {
-    if ([ambaStateMachine getInstance].networkModeWifi || [ambaStateMachine getInstance].wifiBleComboMode)
+    if ([DriftStateMachine getInstance].networkModeWifi || [DriftStateMachine getInstance].wifiBleComboMode)
     {     self.returnStatusLabel.text = @"UpLoadFileToCamera:";
-        [[ambaStateMachine getInstance] uploadFileToCamera: self.fileToUploadTextField.text
+        [[DriftStateMachine getInstance] uploadFileToCamera: self.fileToUploadTextField.text
                                                           :self.uploadFileSizeTextField.text
                                                           :self.md5SumButton.titleLabel.text
                                                           :self.uploadFileOffsetTextField.text];
@@ -1027,7 +1027,7 @@ unsigned int selectedRowIndexNumber;
 - (IBAction)customJSONCmd:(id)sender {
     if ( [self.customJSONTextField.text length] != 0) {
         NSLog(@"Custom JSON Command: %@",self.customJSONTextField.text);
-        [[ambaStateMachine getInstance] sendCustomJSONCommand: self.customJSONTextField.text];
+        [[DriftStateMachine getInstance] sendCustomJSONCommand: self.customJSONTextField.text];
     } else {
         NSLog(@"EMPTY String... Nothing to Send");
     }
@@ -1042,7 +1042,7 @@ unsigned int selectedRowIndexNumber;
     }*/
     self.clientTransportType.text = (NSString *)@"TCP";
     NSLog(@"SET_CLIEN_INFO %@:%@",self.clientIPAddrTextBox.text,self.clientTransportType.text);
-    [[ambaStateMachine getInstance] setClientInfo: self.clientIPAddrTextBox.text
+    [[DriftStateMachine getInstance] setClientInfo: self.clientIPAddrTextBox.text
                                                  : self.clientTransportType.text];
 }
 
@@ -1063,8 +1063,8 @@ unsigned int selectedRowIndexNumber;
 - (void) updateWifiListStatus:(NSNotification *)notificationParam//(NSString *)test
 {
     
-    //if ([ambaStateMachine getInstance].notificationCount == 1) {
-        NSMutableString *tmpString = [ambaStateMachine getInstance].notifyMsg;
+    //if ([DriftStateMachine getInstance].notificationCount == 1) {
+        NSMutableString *tmpString = [DriftStateMachine getInstance].notifyMsg;
         NSData *data = [tmpString dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data
                                                                  options:kNilOptions
@@ -1077,7 +1077,7 @@ unsigned int selectedRowIndexNumber;
     
         NSLog(@"List of Wifi Settings:=========== %@", self.wifiItemList);
         [self.wifiListTableView reloadData];
-        [ambaStateMachine getInstance].notificationCount = 0;
+        [DriftStateMachine getInstance].notificationCount = 0;
     //}
     
 }
@@ -1088,7 +1088,7 @@ unsigned int selectedRowIndexNumber;
     if (self.wifiItemList)
         [self.wifiItemList removeAllObjects];
     
-    [[ambaStateMachine getInstance] getWifiSettings];
+    [[DriftStateMachine getInstance] getWifiSettings];
 }
 
 - (IBAction)setWifiSettings:(id)sender {
@@ -1105,30 +1105,30 @@ unsigned int selectedRowIndexNumber;
             [tmpString appendString:@"\n"];
         }
         //NSLog(@"NewString:%@", tmpString);
-        [[ambaStateMachine getInstance] setWifiSettings:tmpString];
+        [[DriftStateMachine getInstance] setWifiSettings:tmpString];
     }
 }
 
 - (IBAction)getWifiStatus:(id)sender {
     self.returnStatusLabel.text = @"getWifiStatus:";
-    [[ambaStateMachine getInstance] getWifiSettings];
+    [[DriftStateMachine getInstance] getWifiSettings];
 }
 
 - (IBAction)stopWifi:(id)sender {
     //Pop Notification if we are on Wifi or Combo Modes
     self.returnStatusLabel.text = @"StopWifi:";
-    [[ambaStateMachine getInstance] stopWifi];
+    [[DriftStateMachine getInstance] stopWifi];
 }
 
 - (IBAction)startWifi:(id)sender {
     self.returnStatusLabel.text = @"StartWifi:";
-    [[ambaStateMachine getInstance] startWifi];
+    [[DriftStateMachine getInstance] startWifi];
 }
 
 - (IBAction)restartWifi:(id)sender {
     //pop Notification if we are on wifi or Combo Modes
     self.returnStatusLabel.text = @"ReStartWifi:";
-    [[ambaStateMachine getInstance] reStartWifi];
+    [[DriftStateMachine getInstance] reStartWifi];
 }
 
 - (IBAction)editTableRowValue:(id)sender {

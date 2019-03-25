@@ -41,7 +41,7 @@ static FileDownload *fileDLinstance = nil;
         NSArray     *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES);
         NSString    *documentsDirectory = [paths objectAtIndex:0];
         NSString    *localFileName = [fileName lastPathComponent];// stringByDeletingPathExtension];
-        //// NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"amba.jpg"];
+        //// NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"Drift.jpg"];
         NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",localFileName]];
         
         self.manager = [NSFileManager defaultManager];
@@ -53,7 +53,7 @@ static FileDownload *fileDLinstance = nil;
         NSArray     *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES);
         NSString    *documentsDirectory = [paths objectAtIndex:0];
         NSString    *localFileName = [fileName lastPathComponent];// stringByDeletingPathExtension];
-        ////NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"amba.mp4"];
+        ////NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:@"Drift.mp4"];
         NSString    *filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",localFileName]];
         self.manager = [NSFileManager defaultManager];
         [self.manager createFileAtPath:filePath contents:nil attributes:nil];
@@ -69,7 +69,7 @@ static FileDownload *fileDLinstance = nil;
     {
         case NSStreamEventOpenCompleted:
             NSLog(@"Data Connection with Camera: Open");
-            //[self ambaLogString:@"WiFi Connection With Camera Open" toFile:AMBALOGFILE];
+            //[self DriftLogString:@"WiFi Connection With Camera Open" toFile:DriftLOGFILE];
             downloadFlag = 1;
             break;
         case NSStreamEventHasBytesAvailable:

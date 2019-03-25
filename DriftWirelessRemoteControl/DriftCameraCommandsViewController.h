@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <CommonCrypto/CommonDigest.h>	
 
-#import "ambaStateMachine.h"
-#import "constants.h"
+#import "DriftStateMachine.h"
+#import "Constants.h"
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -195,6 +195,6 @@
 - (IBAction)restartWifi:(id)sender;
 - (IBAction)editTableRowValue:(id)sender;
 
-@property (retain, nonatomic) IBOutlet UISwitch *ambaQuerySessionHolderSwitch;
+@property (retain, nonatomic) IBOutlet UISwitch *driftQuerySessionHolderSwitch;
 
 @end

@@ -377,7 +377,7 @@
                                     <segue destination="xmU-N6-XfF" kind="show" id="4Be-4D-nSj"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto&quot;AMBA_QUERY_SESSION_HOLDER&quot;" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fyN-kU-mCI">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto&quot;DRIFT_QUERY_SESSION_HOLDER&quot;" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fyN-kU-mCI">
                                 <rect key="frame" x="31" y="295" width="201" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="6eq-dT-bS6"/>
@@ -440,7 +440,6 @@
                     </view>
                     <navigationItem key="navigationItem" title="Drift Remote Camera" id="ssz-NO-Cp3"/>
                     <connections>
-                        <outlet property="ambaQuerySessionHolderSwitch" destination="Aqy-W5-vmp" id="H3p-BU-bM3"/>
                         <outlet property="cameraCommandsButton" destination="54c-YS-cfS" id="c92-2M-v6b"/>
                         <outlet property="cameraSettingButton" destination="d9X-ua-PQ2" id="bUW-Nh-bsl"/>
                         <outlet property="clientIPAddrTextBox" destination="Nma-2d-Lcc" id="SZD-jf-AlG"/>
@@ -448,6 +447,7 @@
                         <outlet property="customJSONCmdButton" destination="5Zl-6B-nuq" id="jtx-1T-V8g"/>
                         <outlet property="customJSONTextField" destination="HMJ-Dn-ilg" id="tKP-9B-w4b"/>
                         <outlet property="disconnectButton" destination="mE9-2r-5al" id="Bb6-uc-ZzU"/>
+                        <outlet property="driftQuerySessionHolderSwitch" destination="Aqy-W5-vmp" id="QtD-wb-iOE"/>
                         <outlet property="fileOperationButton" destination="Q7J-WO-2mi" id="uTX-yp-iwU"/>
                         <outlet property="setClientInfoButton" destination="7K2-5b-4cm" id="gMM-s2-JY9"/>
                         <outlet property="startSessionButton" destination="dJz-SU-NAT" id="HqB-jv-ywe"/>
@@ -2088,6 +2088,6 @@
         <image name="orange_button.png" width="47" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gAu-4r-ix8"/>
+        <segue reference="6AY-Os-ELU"/>
     </inferredMetricsTieBreakers>
 </document>

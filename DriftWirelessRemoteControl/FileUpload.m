@@ -42,7 +42,7 @@ static FileUpload *fileUpLoadinstance = nil;
     {
         case NSStreamEventOpenCompleted:
             NSLog(@"Data Connection with Camera: Open");
-            //[self ambaLogString:@"WiFi Connection With Camera Open" toFile:AMBALOGFILE];
+            //[self driftLogString:@"WiFi Connection With Camera Open" toFile:DriftLOGFILE];
             uploadFlag = 1;
             //Upload file here
             break;

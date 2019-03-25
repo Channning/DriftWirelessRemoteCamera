@@ -1,12 +1,12 @@
 //
-//  ambaStateMachine.m
-//  AmbaRemoteCam
+//  DriftStateMachine.m
+//  DriftRemoteCam
 //
-//  Created by (Ram Kumar) Ambarella
-//  Copyright (c) 2014 Ambarella. All rights reserved.
+//  Created by Channing.rong
+//  Copyright (c) 2019 Drift Innovication ltd. All rights reserved.
 //
 
-#import "ambaStateMachine.h"
+#import "DriftStateMachine.h"
 #import "DriftCameraCommandsViewController.h"
 
 NSString  *tokenKey     = @"token";
@@ -71,11 +71,11 @@ NSString *stopWifiCmd        = @"stopWifiCmd";
 NSString *startWifiCmd       = @"startWifiCmd";
 NSString *reStartWifiCmd     = @"reStartWifiCmd";
 NSString *querySessionCmd    = @"querySessionCmd";
-NSString *AMBALOGFILE    = @"AmbaRemoteCam.txt";
+NSString *DriftLOGFILE    = @"DriftRemoteCam.txt";
 
 
 
-//command code thats msg_id number as per amba document
+//command code thats msg_id number as per Drift document
 const unsigned int appStatusMsgId       = 1;
 const unsigned int getSettingValueMsgId = 1;
 const unsigned int setCameraParameterMsgId = 2;
@@ -130,7 +130,7 @@ unsigned int STATUS_FLAG;
 unsigned int recvResponse;
 NSTimer   *jsonTimer;
 NSMutableString *tmpString;
-@implementation ambaStateMachine
+@implementation DriftStateMachine
 
 @synthesize sessionToken, lastCommand, currentCommand, typeObject, paramObject, parameterNameList, currentParamIndex;
 @synthesize offsetObject, sizeToDlObject,fileAttributeValue,md5SumObject;
@@ -147,21 +147,21 @@ NSMutableString *tmpString;
 @synthesize notificationCount, customCommandString,playbackFile,presentWorkingDirPath;
 @synthesize enableSessionHolder;
 
-static ambaStateMachine *instance = nil;
+static DriftStateMachine *instance = nil;
 
 
 - (id) init
 {
     self = [super init];
     if (self) {
-        NSLog(@"Ambarella BLE Backend Init");
+        NSLog(@"Drift BLE Backend Init");
     }
     sessionToken = nil;
     bleScanFlag = NO;
     self.networkModeWifi = 0;
     self.networkModeBle = 0;
     self.wifiBleComboMode = 0;
-    [self createAmbaRemoteCamLogDir];
+    [self createDriftRemoteCamLogDir];
     tmpString = [[NSMutableString alloc] init];
     self.wifiIPParameters = [[NSMutableString alloc] init];
     self.notificationCount = 0;
@@ -170,7 +170,7 @@ static ambaStateMachine *instance = nil;
     return  self;
 }
 
-- (void) createAmbaRemoteCamLogDir
+- (void) createDriftRemoteCamLogDir
 {
     //First Create Documentation Directory if it doesnt exit
     NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES)[0];
@@ -194,7 +194,7 @@ static ambaStateMachine *instance = nil;
     
 }
 
-- (void) ambaLogString: (NSString *)content toFile:(NSString *)logFileName
+- (void) DriftLogString: (NSString *)content toFile:(NSString *)logFileName
 {
     NSArray     *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory,NSUserDomainMask, YES);
     NSString    *documentsDirectory = [paths objectAtIndex:0];
@@ -257,13 +257,13 @@ static ambaStateMachine *instance = nil;
 
 
 
-+ (ambaStateMachine *)getInstance
++ (DriftStateMachine *)getInstance
 {
     @synchronized(self)
     {
         if (!instance)
         {
-            instance = [[ambaStateMachine alloc] init];
+            instance = [[DriftStateMachine alloc] init];
         }
         return instance;
     }
@@ -300,7 +300,7 @@ static ambaStateMachine *instance = nil;
     [self.peripheralList removeAllObjects];
     [self notifyViewController];
     //[self.manager scanForPeripheralsWithServices:nil options:nil];
-    [self.manager scanForPeripheralsWithServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:AMBA_RAPTOR1_SERVICE_UUID], nil] options:nil];
+    [self.manager scanForPeripheralsWithServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:Drift_RAPTOR1_SERVICE_UUID], nil] options:nil];
 }
 
 - (void) centralManagerDidUpdateState:(CBCentralManager *)central
@@ -414,7 +414,7 @@ static ambaStateMachine *instance = nil;
     [self notifyViewController];
     
     NSLog(@"BLE Peripheral : %@ : Connected", self.activePeripheral.name);
-    [self ambaLogString:@"BLE Connection With Camera Open" toFile:AMBALOGFILE];
+    [self DriftLogString:@"BLE Connection With Camera Open" toFile:DriftLOGFILE];
     //Stop Scanning on Connect after we connected
     [self.manager stopScan];
     
@@ -425,7 +425,7 @@ static ambaStateMachine *instance = nil;
     [self notifyProgressBarView];
     //Discover all the Primary Services
     [peripheral discoverServices:nil]; //scan for all Services send option Nil or specify the UUID
-    //[peripheral discoverServices:@[[CBUUID UUIDWithString:AMBA_RAPTOR1_SERVICE_UUID]]];
+    //[peripheral discoverServices:@[[CBUUID UUIDWithString:Drift_RAPTOR1_SERVICE_UUID]]];
 }
 - (void) centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)blePeripheral error:(NSError *)error
 {
@@ -444,9 +444,9 @@ static ambaStateMachine *instance = nil;
     NSLog(@"Discovered Primary Services:");
     for (CBService *service in peripheral.services) {
         
-        if ([service.UUID isEqual:[CBUUID UUIDWithString:AMBA_RAPTOR1_SERVICE_UUID]]) {
-            NSLog(@"Amba Service: %@",service);
-            // Found AMBA_SERVICE_UUID next discover Chars for AMBA_SERVICE_UUID
+        if ([service.UUID isEqual:[CBUUID UUIDWithString:Drift_RAPTOR1_SERVICE_UUID]]) {
+            NSLog(@"Drift Service: %@",service);
+            // Found Drift_SERVICE_UUID next discover Chars for Drift_SERVICE_UUID
             [peripheral discoverCharacteristics:nil forService:service];
             //Notify the progressBar
             
@@ -460,10 +460,10 @@ static ambaStateMachine *instance = nil;
         [self cleanup:self.activePeripheral];
         return;
     }
-    NSLog(@"Discover Characteristics for Service UUID: %@",AMBA_RAPTOR1_SERVICE_UUID);
+    NSLog(@"Discover Characteristics for Service UUID: %@",Drift_RAPTOR1_SERVICE_UUID);
     for (CBCharacteristic *chars in service.characteristics) {
         
-        if ([chars.UUID isEqual:[CBUUID UUIDWithString: AMBA_JSON_SEND_CHARCTERISTIC]]) {
+        if ([chars.UUID isEqual:[CBUUID UUIDWithString: Drift_JSON_SEND_CHARCTERISTIC]]) {
             [peripheral setNotifyValue:YES forCharacteristic:chars];
             //NSLog(@"Discovered Characteristics: %@",chars);
             NSLog(@"characteristic.UUID =====> %@", chars.UUID);
@@ -473,7 +473,7 @@ static ambaStateMachine *instance = nil;
             //Notify the progressBar
             [self notifyProgressBarView];
         }
-        else if ([chars.UUID isEqual:[CBUUID UUIDWithString:AMBA_JSON_RECV_CHARCTERISTIC]]) {
+        else if ([chars.UUID isEqual:[CBUUID UUIDWithString:Drift_JSON_RECV_CHARCTERISTIC]]) {
             [peripheral setNotifyValue:YES forCharacteristic:chars];
             //NSLog(@"Discovered Characteristics: %@",chars);
             NSLog(@"characteristic.UUID =====> %@", chars.UUID);
@@ -532,7 +532,7 @@ static ambaStateMachine *instance = nil;
         for (CBService *service in blePeripheral.services) {
             if (service.characteristics != nil) {
                 for ( CBCharacteristic *characteristic in service.characteristics) {
-                    if ( [characteristic.UUID isEqual:[CBUUID UUIDWithString:AMBA_JSON_SEND_CHARCTERISTIC]]) {
+                    if ( [characteristic.UUID isEqual:[CBUUID UUIDWithString:Drift_JSON_SEND_CHARCTERISTIC]]) {
                         if ( characteristic.isNotifying ) {
                             [blePeripheral setNotifyValue:NO forCharacteristic:characteristic];
                             //return;
@@ -768,7 +768,7 @@ static ambaStateMachine *instance = nil;
         case NSStreamEventOpenCompleted:            
             NSLog(@"Connection with Camera: Open");
             self.wifiTCPConnectionStatus = 1;//connected
-            [self ambaLogString:@"WiFi Connection With Camera Open" toFile:AMBALOGFILE];
+            [self DriftLogString:@"WiFi Connection With Camera Open" toFile:DriftLOGFILE];
             if (self.wifiTCPConnectionStatus == 1) {
                 
                 //send notification to wifiViewController for segue
@@ -835,7 +835,7 @@ static ambaStateMachine *instance = nil;
         case NSStreamEventErrorOccurred:
         {
             NSLog(@"Can not connect to host!");
-            [self ambaLogString:@"Can not connect to host!" toFile:AMBALOGFILE];
+            [self DriftLogString:@"Can not connect to host!" toFile:DriftLOGFILE];
             wifiTCPConnectionStatus = 0;
             NSDictionary *notificationDict = [[NSDictionary alloc] init];
             NSNotification *notificationObject = [NSNotification  notificationWithName:noConnectionStatusNotification
@@ -855,7 +855,7 @@ static ambaStateMachine *instance = nil;
             [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
             aStream = nil;
             NSLog(@"Error Writing to Network Stream!");
-            [self ambaLogString:@"Error Writing to Network Stream!" toFile:AMBALOGFILE];
+            [self DriftLogString:@"Error Writing to Network Stream!" toFile:DriftLOGFILE];
             wifiTCPConnectionStatus = 0;
             NSDictionary *notificationDict = [[NSDictionary alloc] init];
             NSNotification *notificationObject = [NSNotification  notificationWithName:noConnectionStatusNotification
@@ -893,8 +893,8 @@ static ambaStateMachine *instance = nil;
                     NSLog(@"Error Writing JSON to outStream");
                 }
                 NSLog(@"Command Sent %@", self.customCommandString);
-                [self ambaLogString:@"JSON Command To Camera: " toFile:AMBALOGFILE];
-                [self ambaLogString:self.customCommandString toFile:AMBALOGFILE];
+                [self DriftLogString:@"JSON Command To Camera: " toFile:DriftLOGFILE];
+                [self DriftLogString:self.customCommandString toFile:DriftLOGFILE];
                 self.customCommandString = @"";
             }
         }
@@ -916,8 +916,8 @@ static ambaStateMachine *instance = nil;
                                       };
                 customDataString = [self convertJsonDictToString:dic];
                 [self sendJSONCommand:customDataString];
-                [self ambaLogString:@"JSON Command To Camera: " toFile:AMBALOGFILE];
-                [self ambaLogString:customDataString toFile:AMBALOGFILE];
+                [self DriftLogString:@"JSON Command To Camera: " toFile:DriftLOGFILE];
+                [self DriftLogString:customDataString toFile:DriftLOGFILE];
                 self.customCommandString = @"";
             }
         }
@@ -1022,8 +1022,8 @@ static ambaStateMachine *instance = nil;
             NSString *jsonDataString =  [self convertJsonDictToString:commandDict];
             NSLog(@"kc test: ready jsonDataString =  [self convertJ");
             NSLog(@"Command Sent %@", jsonDataString);
-            [self ambaLogString:@"JSON Command To Camera: " toFile:AMBALOGFILE];
-            [self ambaLogString:jsonDataString toFile:AMBALOGFILE];
+            [self DriftLogString:@"JSON Command To Camera: " toFile:DriftLOGFILE];
+            [self DriftLogString:jsonDataString toFile:DriftLOGFILE];
         }
     }
     //BLE
@@ -1036,8 +1036,8 @@ static ambaStateMachine *instance = nil;
             NSString *jsonDataString =  [self convertJsonDictToString:commandDict];
             
             [self sendJSONCommand:jsonDataString];
-            [self ambaLogString:@"JSON Command To Camera: " toFile:AMBALOGFILE];
-            [self ambaLogString:jsonDataString toFile:AMBALOGFILE];
+            [self DriftLogString:@"JSON Command To Camera: " toFile:DriftLOGFILE];
+            [self DriftLogString:jsonDataString toFile:DriftLOGFILE];
         }
     }
     //Set 30 sec timer out to get the command response from camera
@@ -1078,9 +1078,9 @@ static ambaStateMachine *instance = nil;
     notifyMsg = (NSMutableString *)message;
     //NSLog(@"messageReceived for command : %@",_notifyMsg);
     
-    [self ambaLogString:@"Camera JSON response :" toFile:AMBALOGFILE];
+    [self DriftLogString:@"Camera JSON response :" toFile:DriftLOGFILE];
     
-    [self ambaLogString:message toFile:AMBALOGFILE];
+    [self DriftLogString:message toFile:DriftLOGFILE];
     
     
     
@@ -1100,7 +1100,7 @@ static ambaStateMachine *instance = nil;
         //close session if there is a camera's sends a Power_off notification message
         //if (! ( [message rangeOfString:@"cam_off"].location == NSNotFound)){
         //    NSLog(@"Camera Sent Power Off Notification!!!!!");
-        //   [self ambaLogString:@"Camera Power Down ---> sending disconnect" toFile:AMBALOGFILE];
+        //   [self DriftLogString:@"Camera Power Down ---> sending disconnect" toFile:DriftLOGFILE];
         //    [self disconnectToCamera];
         //}
         //close the data Port on success download
@@ -1312,11 +1312,11 @@ static ambaStateMachine *instance = nil;
     if ([[responseDict objectForKey:rvalKey] isEqualToNumber:[NSNumber numberWithUnsignedInteger:0]])
     {
         NSLog(@"Session Was Retained: ");
-        [self ambaLogString:@"----- Session Was Retained ----\n" toFile: AMBALOGFILE];
+        [self DriftLogString:@"----- Session Was Retained ----\n" toFile: DriftLOGFILE];
     } else {
         NSLog(@"Session Retain Time Out");
         self.connected = [NSNumber numberWithBool:FALSE];
-        [self ambaLogString:@"----- Session Closed ----\n" toFile: AMBALOGFILE];
+        [self DriftLogString:@"----- Session Closed ----\n" toFile: DriftLOGFILE];
         STATUS_FLAG = 0;
         if (networkModeBle) {
             networkModeBle = 0;
@@ -1476,7 +1476,7 @@ static ambaStateMachine *instance = nil;
             {
                 [convertedDictionary setObject:valueParamNumber forKey:keyParam];
             }
-            // else set it to string (AMBAXXX.jpg)
+            // else set it to string (DriftXXX.jpg)
             else
             {
                 [convertedDictionary setObject:valueParamString forKey:keyParam];
@@ -1556,7 +1556,7 @@ static ambaStateMachine *instance = nil;
         self.connected = [NSNumber numberWithBool:FALSE];
         
         //NSLog(@"Just after changing value %@", self.connected);
-        [self ambaLogString:@"----- Session Closed ----\n" toFile: AMBALOGFILE];
+        [self DriftLogString:@"----- Session Closed ----\n" toFile: DriftLOGFILE];
         STATUS_FLAG = 0;
         if (networkModeBle) {
             networkModeBle = 0;
@@ -1655,7 +1655,7 @@ static ambaStateMachine *instance = nil;
 {
     NSDate *myDate = [[NSDate alloc] init];
     NSString *dateString = [[NSString alloc] initWithFormat: @"%@", myDate];
-    [self ambaLogString:dateString toFile:AMBALOGFILE];
+    [self DriftLogString:dateString toFile:DriftLOGFILE];
     
     NSLog(@"StartSession executed");
     NSLog(@"The connection status is %@", self.connected);
@@ -1905,11 +1905,11 @@ static ambaStateMachine *instance = nil;
     sizeToDlObject = [sizeToDownload intValue];
     //[self sendCmdToCamera: getFileMsgId];
     [[FileDownload fileDownloadInstance] initDataCommunication:self.wifiIPParameters tcpPort: 8787 fileName:paramObject];
-    [self performSelector:@selector(amba_get_file) withObject:nil afterDelay:1.0];
+    [self performSelector:@selector(drift_get_file) withObject:nil afterDelay:1.0];
     //implement offset and fetchSize
 }
 
-- (void) amba_get_file {
+- (void) drift_get_file {
     NSLog(@"do: Fetch File from Camera");
     [self sendCmdToCamera: getFileMsgId];
 }

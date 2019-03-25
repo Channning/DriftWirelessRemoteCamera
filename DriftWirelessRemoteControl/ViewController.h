@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ambaStateMachine.h"
+#import "DriftStateMachine.h"
 
 @interface ViewController : UIViewController
 

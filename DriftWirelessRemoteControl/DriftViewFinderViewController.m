@@ -30,11 +30,9 @@
 
     if (!_video) {
         NSLog(@"RTSP Play URL = rtsp://192.168.42.1/live");
-        NSLog(@"yq-log:: amba-create!!!");
+        NSLog(@"yq-log:: Drift-create!!!");
         _video = [[DriftRTSPPlayer alloc] initWithVideo:@"rtsp://192.168.42.1/live" usesTcp:NO decodeAudio:NO];
-        //            video = [[AmbaRTSPPlayer alloc] initWithVideo:@"rtsp://192.168.42.1/live" usesTcp:NO decodeAudio:NO];
-        
-        //            video = [[AmbaRTSPPlayer alloc] initWithVideo:@"rtsp://192.168.42.1/AmbaStreamTest" usesTcp:NO decodeAudio:NO];
+     
         _video.outputHeight = 640;//176;//426;
         _video.outputWidth = 352;//320;//320;
         //Debug:
@@ -65,16 +63,16 @@
 
 - (void) querySessionHolder: (NSNotification *)notificationParam
 {
-    if ([ ambaStateMachine getInstance].notificationCount ){
+    if ([ DriftStateMachine getInstance].notificationCount ){
         
         UIAlertView *jsonDebugAlert = [[UIAlertView alloc] initWithTitle:@"Last Command Response:"
-                                                                 message: [ambaStateMachine getInstance].notifyMsg
+                                                                 message: [DriftStateMachine getInstance].notifyMsg
                                                                 delegate:self
                                                        cancelButtonTitle:@"RetainSession"
                                                        otherButtonTitles:@"logout", nil];
         [jsonDebugAlert show];
         
-        [ ambaStateMachine getInstance].notificationCount = 0;
+        [ DriftStateMachine getInstance].notificationCount = 0;
     }
 }
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -84,7 +82,7 @@
         //NSLog(@"#############CancelButton Was Activated");
         NSLog(@"LogOut button Selected");
     } else {
-        [[ambaStateMachine getInstance ] keepSessionActive];
+        [[DriftStateMachine getInstance ] keepSessionActive];
     }
 }
 
@@ -108,8 +106,8 @@
 
 - (void) updateCommandReturnStatus: (NSNotification *)notificationParam
 {
-    if ( [ambaStateMachine getInstance].commandReturnValue == 0 )
-        self.returnStatusTextLabel.text = [NSString stringWithFormat:@"%@ Success",self.returnStatusTextLabel.text];    else if ([ambaStateMachine getInstance].commandReturnValue < 0)
+    if ( [DriftStateMachine getInstance].commandReturnValue == 0 )
+        self.returnStatusTextLabel.text = [NSString stringWithFormat:@"%@ Success",self.returnStatusTextLabel.text];    else if ([DriftStateMachine getInstance].commandReturnValue < 0)
             self.returnStatusTextLabel.text = [NSString stringWithFormat:@"%@ FAIL",self.returnStatusTextLabel.text];
 }
 /*
@@ -171,33 +169,33 @@
 }
 - (IBAction)shutterCmd:(id)sender {
     self.returnStatusTextLabel.text = @"Take Photo:";
-    [[ambaStateMachine getInstance] takePhoto];
+    [[DriftStateMachine getInstance] takePhoto];
 }
 
 - (IBAction)stopContShutter:(id)sender {
     self.returnStatusTextLabel.text = @"Stop Cont..Photo:";
     NSLog(@"To Implement the command in StateMachine");
-    [[ambaStateMachine getInstance] stopContPhotoSession];
+    [[DriftStateMachine getInstance] stopContPhotoSession];
 }
 
 - (IBAction)startRec:(id)sender {
     self.returnStatusTextLabel.text = @"Start Record:";
-    [[ambaStateMachine getInstance] cameraRecordStart];
+    [[DriftStateMachine getInstance] cameraRecordStart];
 }
 
 - (IBAction)stopRec:(id)sender {
     self.returnStatusTextLabel.text = @"Stop Rec:";
-    [[ambaStateMachine getInstance] cameraRecordStop];
+    [[DriftStateMachine getInstance] cameraRecordStop];
 }
 
 - (IBAction)splitRecord:(id)sender {
     self.returnStatusTextLabel.text = @"Split Recording:";
-    [[ambaStateMachine getInstance] cameraSplitRecording];
+    [[DriftStateMachine getInstance] cameraSplitRecording];
 }
 - (IBAction)reloadViewFinder:(id)sender {
     //NSLog(@"To Implement the command in StateMachine");
     self.returnStatusTextLabel.text = @"Reset ViewFinder:";
-    [[ambaStateMachine getInstance] cameraResetViewFinder];
+    [[DriftStateMachine getInstance] cameraResetViewFinder];
     [self performSelector:@selector(reloadView) withObject:self afterDelay:3.0];
     [_nextFrameTimer invalidate];
 }
