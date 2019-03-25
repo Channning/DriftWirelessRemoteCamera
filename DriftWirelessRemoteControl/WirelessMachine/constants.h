@@ -2,19 +2,19 @@
 //  constants.h
 //  AmbaRemoteCam
 //
-//  Created by (Ram Kumar) Ambarella
-//  Copyright (c) 2014 Ambarella. All rights reserved.
+//  Created by Channing.rong
+//  Copyright (c) 2019 Drift Innovication ltd. All rights reserved.
 
 
-#ifndef AmbaRemoteCam_constants_h
-#define AmbaRemoteCam_constants_h
+#ifndef DriftRemoteCam_Constants_h
+#define DriftRemoteCam_Constants_h
 
 
-#define AMBA_RAPTOR1_SERVICE_UUID             @"00000000-616D-6261-5F69-645F62617365"
-#define AMBA_JSON_SEND_CHARCTERISTIC          @"11111111-616d-6261-5f69-645f62617365"
-#define AMBA_JSON_RECV_CHARCTERISTIC          @"33333333-616d-6261-5f69-645f62617365"
+#define Drift_RAPTOR1_SERVICE_UUID             @"00000000-616D-6261-5F69-645F62617365"
+#define Drift_JSON_SEND_CHARCTERISTIC          @"11111111-616d-6261-5f69-645f62617365"
+#define Drift_JSON_RECV_CHARCTERISTIC          @"33333333-616d-6261-5f69-645f62617365"
 
-#define ambaServerAddr  @"192.168.42.1"
+#define DriftServerAddr  @"192.168.42.1"
 #define jsonPort        7878
 
 #define changeInConnectionStatusNotification  @"changeInConnectionStatusNotification"
@@ -96,11 +96,11 @@ NSString *allSettingsCmd    = @"allSettings";
 NSString *getSettingValueCmd = @"getSettingValue";
 NSString *getOptionsForValueCmd = @"getOptionsForValue";
 NSString *setCameraParameterCmd = @"setCameraParamValue";
-NSString *AMBALOGFILE    = @"AmbaRemoteCam.txt";
+NSString *DriftLOGFILE    = @"DriftRemoteCam.txt";
 
 
 
-//command code thats msg_id number as per amba document
+//command code thats msg_id number as per Drift document
 const unsigned int appStatusMsgId       = 1;
 const unsigned int getSettingValueMsgId = 1;
 const unsigned int setCameraParameterMsgId = 2;
